@@ -226,6 +226,23 @@
       white-space: pre-wrap;
       line-height: 1.6;
     }
+    .models-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .model-tag {
+      flex: 1; min-width: 200px;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .model-prueba { background: #fff9e6; border: 1px solid #FFD700; }
+    .model-definitivo { background: #fff0f3; border: 1px solid #FF174F; }
+    .model-badge { font-size: 0.7rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
+    .model-prueba .model-badge { color: #b8970a; }
+    .model-definitivo .model-badge { color: #FF174F; }
+    .model-name { font-size: 0.88rem; font-weight: 700; color: #333; }
+    .model-reason { font-size: 0.75rem; color: #666; line-height: 1.4; }
+
     .btn-copy {
       margin-top: 8px;
       background: none;
@@ -412,8 +429,15 @@ Responde ÚNICAMENTE con un JSON válido, sin markdown, sin texto extra. Usa est
       "descripcion": "una sola acción simple",
       "emocion": "emoción transmitida",
       "promptImagen": "prompt detallado completo: personaje fijo, acción, escenario, composición, iluminación, estilo, cámara, textura, atmósfera, restricciones",
+      "modelosImagen": [
+        { "nombre": "Midjourney v6", "tipo": "prueba", "razon": "por qué es ideal para esta escena en pruebas" },
+        { "nombre": "Flux Pro 1.1", "tipo": "definitivo", "razon": "por qué es ideal para resultado final profesional" }
+      ],
       "promptVideo": "SCENE: descripción\\nVISUAL STYLE: estilo\\nCAMERA MOVEMENT: movimiento\\nMAIN SUBJECT: sujeto\\nBACKGROUND: fondo\\nLIGHTING AND MOOD: iluminación\\nAUDIO CUE: descripción audio\\nCOLOR PALETTE: colores\\nREALISM DETAILS: fine grain, micro camera shake, imperfect skin texture\\nRESTRICTIONS: Maintain facial identity, clothing, proportions. Do not change face.",
-      "modeloIA": "Veo 3.1",
+      "modelosVideo": [
+        { "nombre": "Kling 2.6", "tipo": "prueba", "razon": "por qué es ideal para pruebas de esta escena" },
+        { "nombre": "Veo 3.1", "tipo": "definitivo", "razon": "por qué es ideal para el resultado final de esta escena" }
+      ],
       "requiereAudio": false,
       "promptAudio": ""
     }
@@ -484,15 +508,32 @@ Responde ÚNICAMENTE con un JSON válido, sin markdown, sin texto extra. Usa est
         <div class="scene-body" id="sb-${i}">
           <div class="meta-row">
             <span>Emoción: <b>${scene.emocion}</b></span>
-            <span class="model">Modelo IA: <b>${scene.modeloIA}</b></span>
           </div>
           <div class="prompt-block">
             <div class="prompt-label">📷 Prompt Imagen</div>
+            <div class="models-row">
+              ${(scene.modelosImagen || []).map(m => `
+                <div class="model-tag ${m.tipo === 'prueba' ? 'model-prueba' : 'model-definitivo'}">
+                  <span class="model-badge">${m.tipo === 'prueba' ? '🧪 Prueba' : '🏆 Definitivo'}</span>
+                  <span class="model-name">${m.nombre}</span>
+                  <span class="model-reason">${m.razon}</span>
+                </div>
+              `).join('')}
+            </div>
             <div class="prompt-box">${escapeHtml(scene.promptImagen)}</div>
             <button class="btn-copy" onclick="copyText(\`${escapeBt(scene.promptImagen)}\`, this)">📋 Copiar</button>
           </div>
           <div class="prompt-block">
             <div class="prompt-label">🎥 Prompt Video</div>
+            <div class="models-row">
+              ${(scene.modelosVideo || []).map(m => `
+                <div class="model-tag ${m.tipo === 'prueba' ? 'model-prueba' : 'model-definitivo'}">
+                  <span class="model-badge">${m.tipo === 'prueba' ? '🧪 Prueba' : '🏆 Definitivo'}</span>
+                  <span class="model-name">${m.nombre}</span>
+                  <span class="model-reason">${m.razon}</span>
+                </div>
+              `).join('')}
+            </div>
             <div class="prompt-box">${escapeHtml(scene.promptVideo)}</div>
             <button class="btn-copy" onclick="copyText(\`${escapeBt(scene.promptVideo)}\`, this)">📋 Copiar</button>
           </div>
