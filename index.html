@@ -379,7 +379,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 4000,
+          max_tokens: 6000,
           messages: [{
             role: 'user',
             content: `Eres un Director Cinematográfico experto en IA generativa. Analiza este guion y genera prompts profesionales.
@@ -431,7 +431,13 @@ Responde ÚNICAMENTE con un JSON válido, sin markdown, sin texto extra. Usa est
       if (!data.content || !data.content[0]) throw new Error('Respuesta vacía');
 
       let text = data.content[0].text.trim();
+      // Limpiar markdown
       text = text.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim();
+      // Extraer solo el bloque JSON
+      const jsonStart = text.indexOf('{');
+      const jsonEnd = text.lastIndexOf('}');
+      if (jsonStart === -1 || jsonEnd === -1) throw new Error('No se encontró JSON en la respuesta');
+      text = text.substring(jsonStart, jsonEnd + 1);
 
       resultData = JSON.parse(text);
       renderResults(resultData);
