@@ -31,7 +31,7 @@
 
     .how-list { list-style: none; }
     .how-list li { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; font-size: 0.82rem; color: #666; }
-    .how-list li span.num { font-weight: 700; color: #FF174F; font-size: 1rem; line-height: 1; }
+    .how-list li .num { font-weight: 700; color: #FF174F; font-size: 1rem; }
     .tip { margin-top: 20px; background: #fff5f7; border-left: 3px solid #FF174F; border-radius: 6px; padding: 10px 14px; font-size: 0.75rem; color: #FF174F; font-weight: 600; }
 
     .spinner { width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
@@ -42,7 +42,7 @@
 
     .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
     .results-header h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: #FF174F; }
-    .btn-download { background: #FFD700; color: #333; border: none; border-radius: 8px; padding: 10px 18px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: opacity 0.2s; }
+    .btn-download { background: #FFD700; color: #333; border: none; border-radius: 8px; padding: 10px 18px; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; }
     .btn-download:hover { opacity: 0.85; }
 
     .info-block { background: #fff5f7; border-left: 4px solid #FF174F; border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; }
@@ -52,19 +52,18 @@
     .info-item span { font-size: 0.82rem; color: #FF174F; font-weight: 600; }
 
     .scene-block { border: 1px solid #FFE9EC; border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
-    .scene-header { width: 100%; background: #fff; border: none; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; text-align: left; transition: background 0.15s; }
+    .scene-header { width: 100%; background: #fff; border: none; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; text-align: left; }
     .scene-header:hover, .scene-header.open { background: #fff5f7; }
     .scene-title { font-weight: 700; color: #FF174F; font-size: 0.9rem; }
     .scene-desc { font-size: 0.78rem; color: #999; margin-top: 2px; }
-    .chevron { color: #FF174F; font-size: 1rem; transition: transform 0.2s; }
+    .chevron { color: #FF174F; transition: transform 0.2s; display: inline-block; }
     .chevron.open { transform: rotate(180deg); }
 
     .scene-body { display: none; padding: 20px; background: #fffafa; border-top: 1px solid #FFE9EC; }
     .scene-body.open { display: block; }
 
-    .meta-row { display: flex; gap: 20px; margin-bottom: 14px; flex-wrap: wrap; }
-    .meta-row span { font-size: 0.78rem; color: #666; }
-    .meta-row span b { color: #FF174F; }
+    .meta-row { margin-bottom: 14px; font-size: 0.78rem; color: #666; }
+    .meta-row b { color: #FF174F; }
 
     .prompt-block { margin-bottom: 18px; }
     .prompt-label { font-size: 0.82rem; font-weight: 700; color: #FF174F; margin-bottom: 8px; }
@@ -79,8 +78,8 @@
     .model-name { font-size: 0.88rem; font-weight: 700; color: #333; }
     .model-reason { font-size: 0.75rem; color: #666; line-height: 1.4; }
 
-    .prompt-box { background: #f9f9f9; border: 1px solid #FFE9EC; border-radius: 8px; padding: 12px; font-size: 0.75rem; color: #333; white-space: pre-wrap; line-height: 1.6; }
-    .btn-copy { margin-top: 8px; background: none; border: none; color: #FF174F; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+    .prompt-box { background: #f9f9f9; border: 1px solid #FFE9EC; border-radius: 8px; padding: 12px; font-size: 0.75rem; color: #333; white-space: pre-wrap; line-height: 1.6; word-break: break-word; }
+    .btn-copy { margin-top: 8px; background: none; border: none; color: #FF174F; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
     .btn-copy:hover { opacity: 0.7; }
 
     .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
@@ -93,7 +92,6 @@
     footer { border-top: 1px solid #FFE9EC; margin-top: 48px; padding: 28px 32px; text-align: center; }
     footer p { font-size: 0.82rem; color: #666; }
     footer a { color: #FF174F; font-weight: 700; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
     footer .tagline { font-size: 0.72rem; color: #FF174F; font-weight: 600; margin-top: 6px; }
   </style>
 </head>
@@ -135,7 +133,7 @@
       <h2>Prompts Generados</h2>
       <button class="btn-download" onclick="downloadPrompts()">⬇ Descargar</button>
     </div>
-    <div class="info-block" id="blockAnalisis">
+    <div class="info-block">
       <h3>📊 Análisis de Director</h3>
       <div class="info-grid">
         <div class="info-item"><label>Emoción Dominante</label><span id="emocion"></span></div>
@@ -143,12 +141,12 @@
         <div class="info-item"><label>Partes con IA</label><span id="partesIA"></span></div>
       </div>
     </div>
-    <div class="info-block" id="blockPersonaje">
+    <div class="info-block">
       <h3>👤 Personaje Principal</h3>
       <p id="personajeDesc" style="font-size:0.85rem;color:#333;margin-bottom:8px;"></p>
       <p id="personajeFoto" style="font-size:0.78rem;color:#FF174F;font-weight:600;"></p>
     </div>
-    <div class="info-block" id="blockLook">
+    <div class="info-block">
       <h3>🎥 Look Cinematográfico</h3>
       <div class="info-grid">
         <div class="info-item"><label>Cámara</label><span id="lookCamara"></span></div>
@@ -174,27 +172,78 @@
 <script>
   let resultData = null;
 
-  function sanitize(str) {
-    return String(str)
-      .replace(/\\/g, '')
-      .replace(/[\u0000-\u001F\u007F]/g, ' ')
-      .trim();
-  }
-
   async function generatePrompts() {
     const rawInput = document.getElementById('scriptInput').value.trim();
     if (!rawInput) { alert('Por favor ingresa un guion o idea de video'); return; }
-
-    // Sanitizar el input para que no rompa el JSON
-    const input = sanitize(rawInput);
 
     const btn = document.getElementById('btnGenerate');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Generando prompts...';
 
-    const systemPrompt = `Eres un Director Cinematografico experto en IA generativa. Analiza el guion y genera prompts profesionales. REGLAS CRITICAS: 1) Responde UNICAMENTE con JSON valido. 2) NO uses comillas dobles dentro de los valores de texto, usa comillas simples. 3) NO uses caracteres especiales que rompan el JSON. 4) Todos los valores deben ser strings simples sin saltos de linea embebidos.`;
+    // Formato de respuesta en texto plano con delimitadores únicos — evita errores de JSON
+    const systemPrompt = `Eres un Director Cinematografico experto en IA generativa. Analiza guiones y genera prompts profesionales. Responde SIEMPRE usando exactamente el formato de bloques con los delimitadores indicados. No uses JSON. No uses markdown. Solo el formato de bloques.`;
 
-    const userPrompt = `Analiza este guion y responde SOLO con JSON valido sin markdown:\n\nGUION: ${input}\n\nEstructura JSON requerida:\n{\n  "analisis": {\n    "necesitaIA": ["parte1", "parte2"],\n    "emocionDominante": "emocion principal",\n    "intencionVisual": "estilo visual"\n  },\n  "personajePrincipal": {\n    "descripcion": "descripcion completa del personaje",\n    "recomendacionFoto": "instrucciones para foto de referencia"\n  },\n  "lookCinematografico": {\n    "camara": "modelo real como ARRI Alexa Mini LF",\n    "lente": "lente especifico como Cooke S4 35mm",\n    "iluminacion": "descripcion de iluminacion profesional",\n    "movimiento": "tipo de movimiento como handheld documentary",\n    "textura": "fine grain natural motion blur etc"\n  },\n  "escenas": [\n    {\n      "numero": 1,\n      "titulo": "titulo corto",\n      "descripcion": "una sola accion simple",\n      "emocion": "emocion transmitida",\n      "promptImagen": "prompt detallado de imagen en ingles con todos los elementos cinematograficos",\n      "modelosImagen": [\n        { "nombre": "Midjourney v6", "tipo": "prueba", "razon": "razon por la que es ideal para pruebas en esta escena" },\n        { "nombre": "Flux Pro 1.1", "tipo": "definitivo", "razon": "razon por la que es ideal para resultado final" }\n      ],\n      "promptVideo": "SCENE: descripcion. VISUAL STYLE: estilo. CAMERA MOVEMENT: movimiento. MAIN SUBJECT: sujeto. BACKGROUND: fondo. LIGHTING AND MOOD: iluminacion. AUDIO CUE: audio. COLOR PALETTE: colores. REALISM DETAILS: fine grain micro camera shake. RESTRICTIONS: Maintain facial identity clothing proportions.",\n      "modelosVideo": [\n        { "nombre": "Kling 2.6", "tipo": "prueba", "razon": "razon por la que es ideal para pruebas en esta escena" },\n        { "nombre": "Veo 3.1", "tipo": "definitivo", "razon": "razon por la que es ideal para resultado final" }\n      ],\n      "requiereAudio": false,\n      "promptAudio": ""\n    }\n  ],\n  "restriccionesObligatorias": "Maintain facial identity clothing proportions framing and visual style consistency. Do not change face. Do not add extra people.",\n  "notasDirector": "observaciones de coherencia y calidad"\n}`;
+    const userPrompt = `Analiza este guion y genera los prompts cinematograficos profesionales.
+
+GUION:
+${rawInput}
+
+Responde EXACTAMENTE en este formato (respeta los delimitadores ===CAMPO===):
+
+===EMOCION===
+[emocion dominante del video]
+===INTENCION===
+[intencion visual: realismo lifestyle / cinematografico oscuro / documental / comercial premium]
+===PARTES_IA===
+[partes que necesitan IA: gancho, emocion, transicion, etc]
+===PERSONAJE===
+[descripcion completa fija: edad, etnia, cabello, ropa, expresion, energia emocional]
+===FOTO_REF===
+[instrucciones para subir foto de referencia a Higgsfield]
+===CAMARA===
+[modelo de camara: ARRI Alexa Mini LF / Sony Venice / etc]
+===LENTE===
+[lente especifico: Cooke S4 35mm / lente anamorfca / etc]
+===MOVIMIENTO===
+[tipo de movimiento: handheld documentary / steadicam / dolly / etc]
+===TEXTURA===
+[textura: fine grain, natural motion blur, subtle dust particles, etc]
+===RESTRICCIONES===
+[restricciones de coherencia para todos los prompts]
+===NOTAS===
+[observaciones finales del director]
+
+Ahora genera las escenas. Para cada escena usa este formato:
+
+===ESCENA_INICIO===
+===NUM===[numero]
+===TITULO===[titulo corto]
+===DESC===[una sola accion simple]
+===EMOCION_ESCENA===[emocion transmitida]
+===PROMPT_IMAGEN===
+[prompt completo de imagen en ingles: personaje, accion, escenario, composicion, iluminacion, camara, lente, textura, atmosfera, restricciones]
+===MODELO_IMG_PRUEBA===
+[nombre del modelo recomendado para prueba]
+===RAZON_IMG_PRUEBA===
+[razon por la que este modelo es ideal para pruebas en esta escena]
+===MODELO_IMG_DEF===
+[nombre del modelo recomendado para resultado final]
+===RAZON_IMG_DEF===
+[razon por la que este modelo es ideal para resultado final en esta escena]
+===PROMPT_VIDEO===
+[prompt de video: SCENE: ... VISUAL STYLE: ... CAMERA MOVEMENT: ... MAIN SUBJECT: ... BACKGROUND: ... LIGHTING AND MOOD: ... AUDIO CUE: ... COLOR PALETTE: ... REALISM DETAILS: ... RESTRICTIONS: ...]
+===MODELO_VID_PRUEBA===
+[nombre del modelo de video recomendado para prueba]
+===RAZON_VID_PRUEBA===
+[razon por la que este modelo es ideal para pruebas en esta escena]
+===MODELO_VID_DEF===
+[nombre del modelo de video recomendado para resultado final]
+===RAZON_VID_DEF===
+[razon por la que este modelo es ideal para resultado final]
+===REQUIERE_AUDIO===[true o false]
+===PROMPT_AUDIO===
+[si requiere audio, descripcion detallada del audio. Si no, dejar vacio]
+===ESCENA_FIN===`;
 
     try {
       const response = await fetch('https://claude-proxy.morning-hall-4207.workers.dev/', {
@@ -202,7 +251,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 6000,
+          max_tokens: 8000,
           system: systemPrompt,
           messages: [{ role: 'user', content: userPrompt }]
         })
@@ -210,24 +259,14 @@
 
       const data = await response.json();
       if (data.error) throw new Error(data.error.message);
-      if (!data.content || !data.content[0]) throw new Error('Respuesta vacia de la API');
+      if (!data.content || !data.content[0]) throw new Error('Respuesta vacia');
 
-      let text = data.content[0].text.trim();
-
-      // Limpiar markdown si existe
-      text = text.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim();
-
-      // Extraer solo el bloque JSON
-      const jsonStart = text.indexOf('{');
-      const jsonEnd = text.lastIndexOf('}');
-      if (jsonStart === -1 || jsonEnd === -1) throw new Error('No se encontro JSON en la respuesta');
-      text = text.substring(jsonStart, jsonEnd + 1);
-
-      resultData = JSON.parse(text);
+      const text = data.content[0].text;
+      resultData = parseResponse(text);
       renderResults(resultData);
 
     } catch (err) {
-      console.error('Error completo:', err);
+      console.error('Error:', err);
       alert('Error: ' + err.message);
     } finally {
       btn.disabled = false;
@@ -235,23 +274,82 @@
     }
   }
 
+  function getBlock(text, key) {
+    const re = new RegExp(`===\\s*${key}\\s*===\\s*([\\s\\S]*?)(?===|$)`, 'i');
+    const m = text.match(re);
+    return m ? m[1].trim() : '';
+  }
+
+  function parseResponse(text) {
+    const result = {
+      analisis: {
+        emocionDominante: getBlock(text, 'EMOCION'),
+        intencionVisual: getBlock(text, 'INTENCION'),
+        necesitaIA: getBlock(text, 'PARTES_IA')
+      },
+      personajePrincipal: {
+        descripcion: getBlock(text, 'PERSONAJE'),
+        recomendacionFoto: getBlock(text, 'FOTO_REF')
+      },
+      lookCinematografico: {
+        camara: getBlock(text, 'CAMARA'),
+        lente: getBlock(text, 'LENTE'),
+        movimiento: getBlock(text, 'MOVIMIENTO'),
+        textura: getBlock(text, 'TEXTURA')
+      },
+      restriccionesObligatorias: getBlock(text, 'RESTRICCIONES'),
+      notasDirector: getBlock(text, 'NOTAS'),
+      escenas: []
+    };
+
+    // Extraer escenas entre ===ESCENA_INICIO=== y ===ESCENA_FIN===
+    const escenaRe = /===ESCENA_INICIO===([\s\S]*?)===ESCENA_FIN===/gi;
+    let match;
+    while ((match = escenaRe.exec(text)) !== null) {
+      const bloque = match[1];
+      result.escenas.push({
+        numero: getBlock(bloque, 'NUM'),
+        titulo: getBlock(bloque, 'TITULO'),
+        descripcion: getBlock(bloque, 'DESC'),
+        emocion: getBlock(bloque, 'EMOCION_ESCENA'),
+        promptImagen: getBlock(bloque, 'PROMPT_IMAGEN'),
+        modelosImagen: [
+          { tipo: 'prueba', nombre: getBlock(bloque, 'MODELO_IMG_PRUEBA'), razon: getBlock(bloque, 'RAZON_IMG_PRUEBA') },
+          { tipo: 'definitivo', nombre: getBlock(bloque, 'MODELO_IMG_DEF'), razon: getBlock(bloque, 'RAZON_IMG_DEF') }
+        ],
+        promptVideo: getBlock(bloque, 'PROMPT_VIDEO'),
+        modelosVideo: [
+          { tipo: 'prueba', nombre: getBlock(bloque, 'MODELO_VID_PRUEBA'), razon: getBlock(bloque, 'RAZON_VID_PRUEBA') },
+          { tipo: 'definitivo', nombre: getBlock(bloque, 'MODELO_VID_DEF'), razon: getBlock(bloque, 'RAZON_VID_DEF') }
+        ],
+        requiereAudio: getBlock(bloque, 'REQUIERE_AUDIO').toLowerCase() === 'true',
+        promptAudio: getBlock(bloque, 'PROMPT_AUDIO')
+      });
+    }
+
+    return result;
+  }
+
   function renderResults(d) {
     document.getElementById('emocion').textContent = d.analisis.emocionDominante;
     document.getElementById('intencion').textContent = d.analisis.intencionVisual;
-    document.getElementById('partesIA').textContent = Array.isArray(d.analisis.necesitaIA) ? d.analisis.necesitaIA.join(', ') : d.analisis.necesitaIA;
+    document.getElementById('partesIA').textContent = d.analisis.necesitaIA;
     document.getElementById('personajeDesc').textContent = d.personajePrincipal.descripcion;
     document.getElementById('personajeFoto').textContent = '📸 ' + d.personajePrincipal.recomendacionFoto;
     document.getElementById('lookCamara').textContent = d.lookCinematografico.camara;
     document.getElementById('lookLente').textContent = d.lookCinematografico.lente;
     document.getElementById('lookMovimiento').textContent = d.lookCinematografico.movimiento;
     document.getElementById('lookTextura').textContent = d.lookCinematografico.textura;
+    document.getElementById('restricciones').textContent = d.restriccionesObligatorias;
+    document.getElementById('notasDirector').textContent = d.notasDirector;
 
     const container = document.getElementById('scenesContainer');
     container.innerHTML = '';
 
     d.escenas.forEach((scene, i) => {
-      const modelosImagenHTML = buildModels(scene.modelosImagen);
-      const modelosVideoHTML = buildModels(scene.modelosVideo);
+      const div = document.createElement('div');
+      div.className = 'scene-block';
+
       const audioHTML = scene.requiereAudio && scene.promptAudio ? `
         <div class="prompt-block">
           <div class="prompt-label">🔊 Prompt Audio</div>
@@ -259,8 +357,6 @@
           <button class="btn-copy" onclick="copyById('audio-${i}', this)">📋 Copiar</button>
         </div>` : '';
 
-      const div = document.createElement('div');
-      div.className = 'scene-block';
       div.innerHTML = `
         <button class="scene-header" onclick="toggleScene(${i})" id="sh-${i}">
           <div>
@@ -270,49 +366,66 @@
           <span class="chevron" id="chev-${i}">▼</span>
         </button>
         <div class="scene-body" id="sb-${i}">
-          <div class="meta-row">
-            <span>Emoción: <b>${scene.emocion}</b></span>
-          </div>
+          <div class="meta-row">Emoción: <b>${scene.emocion}</b></div>
           <div class="prompt-block">
             <div class="prompt-label">📷 Prompt Imagen</div>
-            ${modelosImagenHTML}
+            <div class="models-row">
+              <div class="model-tag model-prueba">
+                <span class="model-badge">🧪 Prueba</span>
+                <span class="model-name" id="min-${i}"></span>
+                <span class="model-reason" id="rin-${i}"></span>
+              </div>
+              <div class="model-tag model-definitivo">
+                <span class="model-badge">🏆 Definitivo</span>
+                <span class="model-name" id="mid-${i}"></span>
+                <span class="model-reason" id="rid-${i}"></span>
+              </div>
+            </div>
             <div class="prompt-box" id="img-${i}"></div>
             <button class="btn-copy" onclick="copyById('img-${i}', this)">📋 Copiar</button>
           </div>
           <div class="prompt-block">
             <div class="prompt-label">🎥 Prompt Video</div>
-            ${modelosVideoHTML}
+            <div class="models-row">
+              <div class="model-tag model-prueba">
+                <span class="model-badge">🧪 Prueba</span>
+                <span class="model-name" id="mvn-${i}"></span>
+                <span class="model-reason" id="rvn-${i}"></span>
+              </div>
+              <div class="model-tag model-definitivo">
+                <span class="model-badge">🏆 Definitivo</span>
+                <span class="model-name" id="mvd-${i}"></span>
+                <span class="model-reason" id="rvd-${i}"></span>
+              </div>
+            </div>
             <div class="prompt-box" id="vid-${i}"></div>
             <button class="btn-copy" onclick="copyById('vid-${i}', this)">📋 Copiar</button>
           </div>
           ${audioHTML}
         </div>`;
+
       container.appendChild(div);
 
-      // Asignar texto de prompts via textContent para evitar XSS y caracteres rotos
-      document.getElementById(`img-${i}`).textContent = scene.promptImagen || '';
-      document.getElementById(`vid-${i}`).textContent = scene.promptVideo || '';
+      // Asignar contenido via textContent (seguro contra caracteres especiales)
+      document.getElementById(`img-${i}`).textContent = scene.promptImagen;
+      document.getElementById(`vid-${i}`).textContent = scene.promptVideo;
+      document.getElementById(`min-${i}`).textContent = scene.modelosImagen[0].nombre;
+      document.getElementById(`rin-${i}`).textContent = scene.modelosImagen[0].razon;
+      document.getElementById(`mid-${i}`).textContent = scene.modelosImagen[1].nombre;
+      document.getElementById(`rid-${i}`).textContent = scene.modelosImagen[1].razon;
+      document.getElementById(`mvn-${i}`).textContent = scene.modelosVideo[0].nombre;
+      document.getElementById(`rvn-${i}`).textContent = scene.modelosVideo[0].razon;
+      document.getElementById(`mvd-${i}`).textContent = scene.modelosVideo[1].nombre;
+      document.getElementById(`rvd-${i}`).textContent = scene.modelosVideo[1].razon;
       if (scene.requiereAudio && scene.promptAudio) {
-        document.getElementById(`audio-${i}`).textContent = scene.promptAudio;
+        const el = document.getElementById(`audio-${i}`);
+        if (el) el.textContent = scene.promptAudio;
       }
     });
-
-    document.getElementById('restricciones').textContent = d.restriccionesObligatorias;
-    document.getElementById('notasDirector').textContent = d.notasDirector;
 
     const resultsEl = document.getElementById('results');
     resultsEl.classList.add('visible');
     resultsEl.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  function buildModels(modelos) {
-    if (!modelos || !modelos.length) return '';
-    return `<div class="models-row">${modelos.map(m => `
-      <div class="model-tag ${m.tipo === 'prueba' ? 'model-prueba' : 'model-definitivo'}">
-        <span class="model-badge">${m.tipo === 'prueba' ? '🧪 Prueba' : '🏆 Definitivo'}</span>
-        <span class="model-name">${m.nombre}</span>
-        <span class="model-reason">${m.razon}</span>
-      </div>`).join('')}</div>`;
   }
 
   function toggleScene(i) {
@@ -333,23 +446,17 @@
   function downloadPrompts() {
     if (!resultData) return;
     let txt = 'CINEMATIC PROMPT GENERATOR — KEISSY RENGEL\n' + '='.repeat(60) + '\n\n';
-    txt += `EMOCIÓN: ${resultData.analisis.emocionDominante}\n`;
-    txt += `INTENCIÓN VISUAL: ${resultData.analisis.intencionVisual}\n\n`;
+    txt += `EMOCION: ${resultData.analisis.emocionDominante}\n`;
+    txt += `INTENCION VISUAL: ${resultData.analisis.intencionVisual}\n\n`;
     txt += `PERSONAJE: ${resultData.personajePrincipal.descripcion}\n\n`;
     resultData.escenas.forEach(s => {
       txt += '='.repeat(60) + '\n';
       txt += `ESCENA ${s.numero}: ${s.titulo}\n`;
-      txt += `Descripción: ${s.descripcion}\nEmoción: ${s.emocion}\n\n`;
-      if (s.modelosImagen) {
-        txt += `MODELOS IMAGEN:\n`;
-        s.modelosImagen.forEach(m => txt += `  [${m.tipo.toUpperCase()}] ${m.nombre}: ${m.razon}\n`);
-      }
-      txt += `\nPROMPT IMAGEN:\n${s.promptImagen}\n\n`;
-      if (s.modelosVideo) {
-        txt += `MODELOS VIDEO:\n`;
-        s.modelosVideo.forEach(m => txt += `  [${m.tipo.toUpperCase()}] ${m.nombre}: ${m.razon}\n`);
-      }
-      txt += `\nPROMPT VIDEO:\n${s.promptVideo}\n\n`;
+      txt += `Descripcion: ${s.descripcion}\nEmocion: ${s.emocion}\n\n`;
+      txt += `MODELOS IMAGEN:\n  [PRUEBA] ${s.modelosImagen[0].nombre}: ${s.modelosImagen[0].razon}\n  [DEFINITIVO] ${s.modelosImagen[1].nombre}: ${s.modelosImagen[1].razon}\n\n`;
+      txt += `PROMPT IMAGEN:\n${s.promptImagen}\n\n`;
+      txt += `MODELOS VIDEO:\n  [PRUEBA] ${s.modelosVideo[0].nombre}: ${s.modelosVideo[0].razon}\n  [DEFINITIVO] ${s.modelosVideo[1].nombre}: ${s.modelosVideo[1].razon}\n\n`;
+      txt += `PROMPT VIDEO:\n${s.promptVideo}\n\n`;
       if (s.requiereAudio && s.promptAudio) txt += `PROMPT AUDIO:\n${s.promptAudio}\n\n`;
     });
     txt += `RESTRICCIONES:\n${resultData.restriccionesObligatorias}\n\n`;
