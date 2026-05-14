@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cinematic Prompt Generator · Keissy Rengel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #ffffff 0%, #fff5f7 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+
+    /* HEADER */
+    header {
+      border-bottom: 1px solid #FFE9EC;
+      padding: 24px 32px;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    header img { height: 44px; width: auto; }
+    .header-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      color: #FF174F;
+    }
+    .header-text p { font-size: 0.75rem; color: #999; margin-top: 2px; }
+
+    /* MAIN */
+    main { max-width: 1100px; margin: 0 auto; padding: 32px; }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 768px) { .top-grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #fff;
+      border: 1px solid #FFE9EC;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #FF174F;
+      margin-bottom: 16px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 180px;
+      border: 1px solid #FFE9EC;
+      border-radius: 8px;
+      padding: 14px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.85rem;
+      color: #333;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    textarea:focus { border-color: #FF174F; }
+
+    .btn-generate {
+      margin-top: 14px;
+      width: 100%;
+      background: #FF174F;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn-generate:hover { opacity: 0.9; transform: scale(1.01); }
+    .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .how-list { list-style: none; }
+    .how-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      font-size: 0.82rem;
+      color: #666;
+    }
+    .how-list li span.num {
+      font-weight: 700;
+      color: #FF174F;
+      font-size: 1rem;
+      line-height: 1;
+    }
+    .tip {
+      margin-top: 20px;
+      background: #fff5f7;
+      border-left: 3px solid #FF174F;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 0.75rem;
+      color: #FF174F;
+      font-weight: 600;
+    }
+
+    /* SPINNER */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* RESULTS */
+    #results { display: none; }
+    #results.visible { display: block; }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .results-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: #FF174F;
+    }
+    .btn-download {
+      background: #FFD700;
+      color: #333;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+    .btn-download:hover { opacity: 0.85; }
+
+    .info-block {
+      background: #fff5f7;
+      border-left: 4px solid #FF174F;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+    .info-block h3 { font-size: 0.9rem; color: #FF174F; margin-bottom: 12px; font-weight: 700; }
+    .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .info-item label { font-size: 0.72rem; color: #999; font-weight: 600; display: block; margin-bottom: 2px; }
+    .info-item span { font-size: 0.82rem; color: #FF174F; font-weight: 600; }
+
+    .scene-block {
+      border: 1px solid #FFE9EC;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .scene-header {
+      width: 100%;
+      background: #fff;
+      border: none;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .scene-header:hover { background: #fff5f7; }
+    .scene-header.open { background: #fff5f7; }
+    .scene-title { font-weight: 700; color: #FF174F; font-size: 0.9rem; }
+    .scene-desc { font-size: 0.78rem; color: #999; margin-top: 2px; }
+    .chevron { color: #FF174F; font-size: 1rem; transition: transform 0.2s; }
+    .chevron.open { transform: rotate(180deg); }
+
+    .scene-body {
+      display: none;
+      padding: 20px;
+      background: #fffafa;
+      border-top: 1px solid #FFE9EC;
+    }
+    .scene-body.open { display: block; }
+
+    .meta-row { display: flex; gap: 20px; margin-bottom: 14px; flex-wrap: wrap; }
+    .meta-row span { font-size: 0.78rem; color: #666; }
+    .meta-row span b { color: #FF174F; }
+    .meta-row span.model b { color: #FFD700; }
+
+    .prompt-block { margin-bottom: 14px; }
+    .prompt-label { font-size: 0.82rem; font-weight: 700; color: #FF174F; margin-bottom: 6px; }
+    .prompt-box {
+      background: #f9f9f9;
+      border: 1px solid #FFE9EC;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.75rem;
+      color: #333;
+      white-space: pre-wrap;
+      line-height: 1.6;
+    }
+    .btn-copy {
+      margin-top: 8px;
+      background: none;
+      border: none;
+      color: #FF174F;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-copy:hover { opacity: 0.7; }
+
+    .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+    @media (max-width: 600px) { .bottom-grid { grid-template-columns: 1fr; } }
+
+    .note-block {
+      padding: 14px 18px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      color: #666;
+      line-height: 1.5;
+    }
+    .note-block h4 { font-size: 0.82rem; font-weight: 700; margin-bottom: 6px; color: #FF174F; }
+    .note-block.red { background: #fff5f7; border-left: 4px solid #FF174F; }
+    .note-block.gold { background: #fffdf0; border-left: 4px solid #FFD700; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid #FFE9EC;
+      margin-top: 48px;
+      padding: 28px 32px;
+      text-align: center;
+    }
+    footer p { font-size: 0.82rem; color: #666; }
+    footer a { color: #FF174F; font-weight: 700; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    footer .tagline { font-size: 0.72rem; color: #FF174F; font-weight: 600; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <img src="https://assets.cdn.filesafe.space/1tnv6pXlSb2uk7llIeB0/media/699258e9a9efde7b16867e58.png" alt="Keissy Rengel"/>
+    <div class="header-text">
+      <h1>Cinematic Prompt Generator</h1>
+      <p>Director IA · Transforma tu guion en prompts profesionales para IA generativa</p>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="top-grid">
+    <div class="card">
+      <h2>Tu Guion / Idea de Video</h2>
+      <textarea id="scriptInput" placeholder="Pega tu prompt, guion, o idea de video aquí. Por ejemplo:
+
+'Un emprendedor recibe un mensaje que cambia su vida. Entra en pánico, pero luego respira profundo. Mira la ciudad desde su ventana y toma una decisión importante.'"></textarea>
+      <button class="btn-generate" id="btnGenerate" onclick="generatePrompts()">
+        ✨ Generar Prompts
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>¿Cómo funciona?</h2>
+      <ul class="how-list">
+        <li><span class="num">1</span><span>Comparte tu guion o idea de video</span></li>
+        <li><span class="num">2</span><span>La IA aplica el framework de director profesional</span></li>
+        <li><span class="num">3</span><span>Recibe prompts para imagen, video y audio</span></li>
+        <li><span class="num">4</span><span>Úsalos en Higgsfield, Midjourney, Kling y más</span></li>
+      </ul>
+      <div class="tip">💡 Cuanto más detallado sea tu guion, mejores serán los prompts generados.</div>
+    </div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div id="results" class="card">
+    <div class="results-header">
+      <h2>Prompts Generados</h2>
+      <button class="btn-download" onclick="downloadPrompts()">⬇ Descargar</button>
+    </div>
+
+    <!-- Análisis -->
+    <div class="info-block" id="blockAnalisis">
+      <h3>📊 Análisis de Director</h3>
+      <div class="info-grid">
+        <div class="info-item"><label>Emoción Dominante</label><span id="emocion"></span></div>
+        <div class="info-item"><label>Intención Visual</label><span id="intencion"></span></div>
+        <div class="info-item"><label>Partes con IA</label><span id="partesIA"></span></div>
+      </div>
+    </div>
+
+    <!-- Personaje -->
+    <div class="info-block" id="blockPersonaje">
+      <h3>👤 Personaje Principal</h3>
+      <p id="personajeDesc" style="font-size:0.85rem;color:#333;margin-bottom:8px;"></p>
+      <p id="personajeFoto" style="font-size:0.78rem;color:#FF174F;font-weight:600;"></p>
+    </div>
+
+    <!-- Look -->
+    <div class="info-block" id="blockLook">
+      <h3>🎥 Look Cinematográfico</h3>
+      <div class="info-grid">
+        <div class="info-item"><label>Cámara</label><span id="lookCamara"></span></div>
+        <div class="info-item"><label>Lente</label><span id="lookLente"></span></div>
+        <div class="info-item"><label>Movimiento</label><span id="lookMovimiento"></span></div>
+        <div class="info-item"><label>Textura</label><span id="lookTextura"></span></div>
+      </div>
+    </div>
+
+    <!-- Escenas -->
+    <h3 style="font-size:0.95rem;font-weight:700;color:#FF174F;margin-bottom:14px;">🎬 Micro-Escenas</h3>
+    <div id="scenesContainer"></div>
+
+    <!-- Notas finales -->
+    <div class="bottom-grid">
+      <div class="note-block red">
+        <h4>⚠️ Restricciones Obligatorias</h4>
+        <p id="restricciones"></p>
+      </div>
+      <div class="note-block gold">
+        <h4>📝 Notas del Director</h4>
+        <p id="notasDirector"></p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>Esta app fue creada para ti por <a href="https://www.keissyrengel.com/" target="_blank">Keissy Rengel</a> con Claude AI</p>
+  <p class="tagline">Estrategia que convierte · Sistemas que escalan · Resultados que transforman</p>
+</footer>
+
+<script>
+  let resultData = null;
+
+  async function generatePrompts() {
+    const input = document.getElementById('scriptInput').value.trim();
+    if (!input) { alert('Por favor ingresa un guion o idea de video'); return; }
+
+    const btn = document.getElementById('btnGenerate');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Generando prompts...';
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 4000,
+          messages: [{
+            role: 'user',
+            content: `Eres un Director Cinematográfico experto en IA generativa. Analiza este guion y genera prompts profesionales.
+
+GUION:
+"${input}"
+
+Responde ÚNICAMENTE con un JSON válido, sin markdown, sin texto extra. Usa esta estructura exacta:
+{
+  "analisis": {
+    "necesitaIA": ["parte1", "parte2"],
+    "emocionDominante": "emoción principal",
+    "intencionVisual": "estilo visual"
+  },
+  "personajePrincipal": {
+    "descripcion": "descripción completa y fija del personaje con edad, etnia, cabello, ropa, expresión",
+    "recomendacionFoto": "instrucciones para foto de referencia en Higgsfield"
+  },
+  "lookCinematografico": {
+    "camara": "modelo real como ARRI Alexa Mini LF",
+    "lente": "lente específico como Cooke S4 35mm",
+    "iluminacion": "descripción de iluminación profesional",
+    "movimiento": "tipo de movimiento como handheld documentary",
+    "textura": "fine grain, natural motion blur, etc."
+  },
+  "escenas": [
+    {
+      "numero": 1,
+      "titulo": "título corto",
+      "descripcion": "una sola acción simple",
+      "emocion": "emoción transmitida",
+      "promptImagen": "prompt detallado completo: personaje fijo, acción, escenario, composición, iluminación, estilo, cámara, textura, atmósfera, restricciones",
+      "promptVideo": "SCENE: descripción\\nVISUAL STYLE: estilo\\nCAMERA MOVEMENT: movimiento\\nMAIN SUBJECT: sujeto\\nBACKGROUND: fondo\\nLIGHTING AND MOOD: iluminación\\nAUDIO CUE: descripción audio\\nCOLOR PALETTE: colores\\nREALISM DETAILS: fine grain, micro camera shake, imperfect skin texture\\nRESTRICTIONS: Maintain facial identity, clothing, proportions. Do not change face.",
+      "modeloIA": "Veo 3.1",
+      "requiereAudio": false,
+      "promptAudio": ""
+    }
+  ],
+  "restriccionesObligatorias": "Maintain facial identity, clothing, proportions, framing and visual style consistency. Do not change face. Do not add extra people. Do not alter age. Do not change primary lighting.",
+  "notasDirector": "observaciones de coherencia y calidad"
+}`
+          }]
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.error) throw new Error(data.error.message);
+      if (!data.content || !data.content[0]) throw new Error('Respuesta vacía');
+
+      let text = data.content[0].text.trim();
+      text = text.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '').trim();
+
+      resultData = JSON.parse(text);
+      renderResults(resultData);
+
+    } catch (err) {
+      console.error(err);
+      alert('Error: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '✨ Generar Prompts';
+    }
+  }
+
+  function renderResults(d) {
+    // Análisis
+    document.getElementById('emocion').textContent = d.analisis.emocionDominante;
+    document.getElementById('intencion').textContent = d.analisis.intencionVisual;
+    document.getElementById('partesIA').textContent = d.analisis.necesitaIA.join(', ');
+
+    // Personaje
+    document.getElementById('personajeDesc').textContent = d.personajePrincipal.descripcion;
+    document.getElementById('personajeFoto').textContent = '📸 ' + d.personajePrincipal.recomendacionFoto;
+
+    // Look
+    document.getElementById('lookCamara').textContent = d.lookCinematografico.camara;
+    document.getElementById('lookLente').textContent = d.lookCinematografico.lente;
+    document.getElementById('lookMovimiento').textContent = d.lookCinematografico.movimiento;
+    document.getElementById('lookTextura').textContent = d.lookCinematografico.textura;
+
+    // Escenas
+    const container = document.getElementById('scenesContainer');
+    container.innerHTML = '';
+    d.escenas.forEach((scene, i) => {
+      const div = document.createElement('div');
+      div.className = 'scene-block';
+      div.innerHTML = `
+        <button class="scene-header" onclick="toggleScene(${i})" id="sh-${i}">
+          <div>
+            <div class="scene-title">Escena ${scene.numero}: ${scene.titulo}</div>
+            <div class="scene-desc">${scene.descripcion}</div>
+          </div>
+          <span class="chevron" id="chev-${i}">▼</span>
+        </button>
+        <div class="scene-body" id="sb-${i}">
+          <div class="meta-row">
+            <span>Emoción: <b>${scene.emocion}</b></span>
+            <span class="model">Modelo IA: <b>${scene.modeloIA}</b></span>
+          </div>
+          <div class="prompt-block">
+            <div class="prompt-label">📷 Prompt Imagen</div>
+            <div class="prompt-box">${escapeHtml(scene.promptImagen)}</div>
+            <button class="btn-copy" onclick="copyText(\`${escapeBt(scene.promptImagen)}\`, this)">📋 Copiar</button>
+          </div>
+          <div class="prompt-block">
+            <div class="prompt-label">🎥 Prompt Video</div>
+            <div class="prompt-box">${escapeHtml(scene.promptVideo)}</div>
+            <button class="btn-copy" onclick="copyText(\`${escapeBt(scene.promptVideo)}\`, this)">📋 Copiar</button>
+          </div>
+          ${scene.requiereAudio && scene.promptAudio ? `
+          <div class="prompt-block">
+            <div class="prompt-label">🔊 Prompt Audio</div>
+            <div class="prompt-box">${escapeHtml(scene.promptAudio)}</div>
+            <button class="btn-copy" onclick="copyText(\`${escapeBt(scene.promptAudio)}\`, this)">📋 Copiar</button>
+          </div>` : ''}
+        </div>
+      `;
+      container.appendChild(div);
+    });
+
+    // Notas
+    document.getElementById('restricciones').textContent = d.restriccionesObligatorias;
+    document.getElementById('notasDirector').textContent = d.notasDirector;
+
+    const resultsEl = document.getElementById('results');
+    resultsEl.classList.add('visible');
+    resultsEl.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function toggleScene(i) {
+    const body = document.getElementById(`sb-${i}`);
+    const chev = document.getElementById(`chev-${i}`);
+    const header = document.getElementById(`sh-${i}`);
+    body.classList.toggle('open');
+    chev.classList.toggle('open');
+    header.classList.toggle('open');
+  }
+
+  function copyText(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅ Copiado!';
+      setTimeout(() => btn.innerHTML = orig, 2000);
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function escapeBt(str) {
+    return String(str).replace(/`/g, "'").replace(/\\/g, '\\\\');
+  }
+
+  function downloadPrompts() {
+    if (!resultData) return;
+    let txt = 'CINEMATIC PROMPT GENERATOR — KEISSY RENGEL\n' + '='.repeat(60) + '\n\n';
+    txt += `EMOCIÓN: ${resultData.analisis.emocionDominante}\n`;
+    txt += `INTENCIÓN VISUAL: ${resultData.analisis.intencionVisual}\n\n`;
+    txt += `PERSONAJE: ${resultData.personajePrincipal.descripcion}\n\n`;
+    resultData.escenas.forEach(s => {
+      txt += '='.repeat(60) + '\n';
+      txt += `ESCENA ${s.numero}: ${s.titulo}\n`;
+      txt += `Descripción: ${s.descripcion}\nEmoción: ${s.emocion}\nModelo IA: ${s.modeloIA}\n\n`;
+      txt += `PROMPT IMAGEN:\n${s.promptImagen}\n\n`;
+      txt += `PROMPT VIDEO:\n${s.promptVideo}\n\n`;
+      if (s.requiereAudio && s.promptAudio) txt += `PROMPT AUDIO:\n${s.promptAudio}\n\n`;
+    });
+    txt += `RESTRICCIONES:\n${resultData.restriccionesObligatorias}\n\n`;
+    txt += `NOTAS DEL DIRECTOR:\n${resultData.notasDirector}`;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' }));
+    a.download = 'prompts_cinematicos.txt';
+    a.click();
+  }
+</script>
+</body>
+</html>
